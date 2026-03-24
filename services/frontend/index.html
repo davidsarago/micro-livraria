@@ -22,6 +22,19 @@
             <p class="has-text-centered">Uma simples livraria utilizando microservices</p>
         </div>
         <section class="container">
+            <section class="search-wrapper" aria-label="Busca de livros por ID">
+                <p class="search-title">Buscar livro por ID</p>
+                <div class="field has-addons search-controls">
+                    <div class="control is-expanded">
+                        <input id="search-book-id" class="input search-input" type="number" min="1" placeholder="Ex: 1" />
+                    </div>
+                    <div class="control">
+                        <button id="search-book-btn" class="button is-info">Buscar</button>
+                    </div>
+                </div>
+                <div id="search-result" class="search-result" aria-live="polite"></div>
+            </section>
+
             <div class="columns books"></div>
         </section>
 

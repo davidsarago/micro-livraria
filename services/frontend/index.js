@@ -52,8 +52,63 @@ function calculateShipping(id, cep) {
         });
 }
 
+function renderSearchResult(book) {
+    const container = document.querySelector('#search-result');
+
+    if (!book || !book.id) {
+        container.innerHTML = '<div class="search-result-card">Nenhum livro encontrado para esse ID.</div>';
+        swal('Livro não encontrado', 'Nenhum livro foi encontrado com esse ID.', 'warning');
+        return;
+    }
+
+    container.innerHTML = `
+        <article class="search-result-card">
+            <strong>${book.name}</strong><br />
+            Autor: ${book.author}<br />
+            ID: ${book.id}<br />
+            Preço: R$${Number(book.price).toFixed(2)}
+        </article>
+    `;
+}
+
+function searchBookById(id) {
+    fetch('http://localhost:3000/product/' + id)
+        .then((data) => {
+            if (data.ok) {
+                return data.json();
+            }
+            throw data.statusText;
+        })
+        .then((book) => {
+            renderSearchResult(book);
+        })
+        .catch((err) => {
+            swal('Erro', 'Erro ao consultar livro por ID', 'error');
+            console.error(err);
+        });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     const books = document.querySelector('.books');
+    const searchButton = document.querySelector('#search-book-btn');
+    const searchInput = document.querySelector('#search-book-id');
+
+    function handleSearch() {
+        const id = Number(searchInput.value);
+        if (!id || id < 1) {
+            swal('Campo inválido', 'Informe um ID numérico maior que zero.', 'warning');
+            return;
+        }
+
+        searchBookById(id);
+    }
+
+    searchButton.addEventListener('click', handleSearch);
+    searchInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            handleSearch();
+        }
+    });
 
     fetch('http://localhost:3000/products')
         .then((data) => {
